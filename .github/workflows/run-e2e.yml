@@ -52,7 +52,7 @@ jobs:
         run: |
           cd backend
           mvn clean package -DskipTests
-          mvn spring-boot:run &
+          nohup mvn spring-boot:run > backend.log 2>&1 &
           echo "Waiting for backend to start..."
           npx wait-on http://localhost:8181
 
@@ -60,7 +60,7 @@ jobs:
       - name: Start Frontend
         run: |
           cd frontend
-          npm run dev &
+          nohup npm run dev > frontend.log 2>&1 &
           echo "Waiting for frontend to start..."
           npx wait-on http://localhost:5173
 
