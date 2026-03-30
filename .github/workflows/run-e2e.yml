@@ -54,7 +54,17 @@ jobs:
           mvn clean package -DskipTests
           nohup mvn spring-boot:run > backend.log 2>&1 &
           echo "Waiting for backend to start..."
-          npx wait-on http://localhost:8181
+          
+          # Poll backend port until ready
+          for i in {1..30}; do
+            if curl -s http://localhost:8181/actuator/health >/dev/null; then
+              echo "Backend is up!"
+              break
+            else
+              echo "Waiting for backend... $i"
+              sleep 2
+            fi
+          done
 
       # 6c. Start frontend server
       - name: Start Frontend
