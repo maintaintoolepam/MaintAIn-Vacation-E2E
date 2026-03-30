@@ -41,17 +41,18 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
-      # 6a. Install backend & frontend dependencies
-      - name: Install Backend & Frontend dependencies
+      # 6a. Install frontend dependencies
+      - name: Install Frontend dependencies
         run: |
-          cd backend && npm ci
-          cd ../frontend && npm ci
+          cd frontend
+          npm ci
 
-      # 6b. Start backend server
-      - name: Start Backend
+      # 6b. Build and start Spring Boot backend
+      - name: Start Backend (Spring Boot)
         run: |
           cd backend
-          npm run start &
+          mvn clean package -DskipTests
+          mvn spring-boot:run &
           echo "Waiting for backend to start..."
           npx wait-on http://localhost:8181
 
