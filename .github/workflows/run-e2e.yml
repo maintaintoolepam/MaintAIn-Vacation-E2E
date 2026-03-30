@@ -41,6 +41,28 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
+      # 6a. Install backend & frontend dependencies
+      - name: Install Backend & Frontend dependencies
+        run: |
+          cd backend && npm ci
+          cd ../frontend && npm ci
+
+      # 6b. Start backend server
+      - name: Start Backend
+        run: |
+          cd backend
+          npm run start &
+          echo "Waiting for backend to start..."
+          npx wait-on http://localhost:8181
+
+      # 6c. Start frontend server
+      - name: Start Frontend
+        run: |
+          cd frontend
+          npm run dev &
+          echo "Waiting for frontend to start..."
+          npx wait-on http://localhost:5173
+
       # 7. Run E2E tests
       - name: Run Playwright tests
         env:
