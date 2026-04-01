@@ -78,7 +78,7 @@ test.describe('UI – Vacation Management', () => {
     // Verify status is PENDING within that row
     await expect(createdRow.getByText(/pending/i)).toBeVisible();
 
-    // Verify remaining days decreased in the UI (FIXED FLAKY PART)
+    // Verify remaining days decreased.
     const remainingText = page.getByText(/remaining/i);
 
     await expect
