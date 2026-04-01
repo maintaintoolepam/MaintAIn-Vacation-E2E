@@ -78,9 +78,17 @@ test.describe('UI – Vacation Management', () => {
     // Verify status is PENDING within that row
     await expect(createdRow.getByText(/pending/i)).toBeVisible();
 
-    // Verify remaining days decreased in the UI
+    // Verify remaining days decreased in the UI (FIXED FLAKY PART)
     const remainingText = page.getByText(/remaining/i);
-    await expect(remainingText).not.toContainText(String(daysBefore), { timeout: 10_000 });
+
+    await expect
+      .poll(async () => {
+        const text = await remainingText.textContent();
+        const match = text?.match(/(\d+)/);
+        return match ? Number(match[1]) : null;
+      }, { timeout: 10_000 })
+      .toBeLessThan(daysBefore);
+
     const text = await remainingText.textContent();
     const match = text?.match(/(\d+)/);
     expect(match).not.toBeNull();
